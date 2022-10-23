@@ -1,6 +1,7 @@
 require('dotenv').config();
 const User = require('../models/User');
 const cryptojs = require('crypto-js');
+const { createToken } = require('../middleware/jwt');
 
 const Register = async (req, res)=>{
 
@@ -31,7 +32,8 @@ const Login = async (req, res)=>{
         const hashedPassword = cryptojs.AES.decrypt(user.password, process.env.SECRET_KEY).toString(cryptojs.enc.Utf8);
         if(hashedPassword !== req.query.password) return res.status(401).json({message: "Wrong Credentials!"});
 
-        res.status(200).json(user);
+        const token = createToken(user);
+        res.status(200).json({token});
 
     } catch (err) {
         res.status(500).json({message: `Error Login! : ${err}`});
