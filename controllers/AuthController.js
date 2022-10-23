@@ -33,7 +33,8 @@ const Login = async (req, res)=>{
         if(hashedPassword !== req.query.password) return res.status(401).json({message: "Wrong Credentials!"});
 
         const token = createToken(user);
-        res.status(200).json({token});
+        const { password, ...userData } = user._doc; 
+        res.status(200).json({...userData, token});
 
     } catch (err) {
         res.status(500).json({message: `Error Login! : ${err}`});

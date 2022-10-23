@@ -5,9 +5,12 @@ const {
   UpdateUser,
   DeleteUser,
 } = require("../controllers/UserController");
+const { verifyToken } = require('../middleware/jwt');
 
-router.route("/").get(GetAllUser);
-router.route("/:id").patch(UpdateUser).delete(DeleteUser);
+router.get("/", verifyToken, GetAllUser);
+router.patch("/:id", verifyToken, UpdateUser);
+router.delete("/:id", verifyToken, DeleteUser);
+
 
 
 module.exports = router;
