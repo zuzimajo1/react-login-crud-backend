@@ -1,5 +1,4 @@
 require('dotenv').config();
-const express = require('express');
 const User = require('../models/User');
 const cryptojs = require('crypto-js');
 
@@ -16,10 +15,9 @@ const Register = async (req, res)=>{
     });
     try {
         const saveuser = await newuser.save();
-        const { password, ...others } = saveuser._doc;
-        res.status(200).json({ ...others });
-    } catch (error) {
-        res.status(500).json(error)
+        res.status(200).json(saveuser);
+    } catch (err) {
+        res.status(500).json({message: `Error registering the user: ${err}`})
     }
 }
 
@@ -28,16 +26,15 @@ const Register = async (req, res)=>{
 const Login = async (req, res)=>{
     try {
         const user = await User.findOne({ email: req.query.email });
-        if(!user) return res.status(401).json("Wrong Credentials");
+        if(!user) return res.status(401).json({message: "Account doesn't exist!"});
 
         const hashedPassword = cryptojs.AES.decrypt(user.password, process.env.SECRET_KEY).toString(cryptojs.enc.Utf8);
-        if(hashedPassword !== req.query.password) return res.status(401).json("Wrong Password");
+        if(hashedPassword !== req.query.password) return res.status(401).json({message: "Wrong Credentials!"});
 
-        const {password, ...others } = user._doc;
-        res.status(200).json({...others});
+        res.status(200).json(user);
 
-    } catch (error) {
-        res.status(500).json(error);
+    } catch (err) {
+        res.status(500).json({message: `Error Login! : ${err}`});
     }
 }
 

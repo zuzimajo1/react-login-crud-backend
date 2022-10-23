@@ -10,11 +10,13 @@ app.use(express.json());
 
 
 const AuthRouter = require("./routes/AuthRouter");
+const UsersRouter = require("./routes/UserRouter");
 
 mongoose.connect(process.env.MONGODB).then(()=> console.log("Connected")).catch((err)=> console.log(err));
 
 //API Routes
 app.use("/auth", AuthRouter);
+app.use("/users", UsersRouter);
 
 
 app.get('/', (req, res)=>{
