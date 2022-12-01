@@ -12,7 +12,7 @@ Login to your google account or github and create a database [here](https://acco
 
 Create an `env` file and save it in the root of your project folder
 ```
-// REFER to the .env.sample above
+// REFER to the .env.example above
 ```
 
 ### 3. Run development server
